@@ -182,7 +182,7 @@ $conn->close();
                 <?php while($row = $result->fetch_assoc()): ?>
                     <div class="col-md-6 mb-4">
                         <div class="card card-horizontal">
-                            <img src="<?php echo $row['image']; ?>" class="card-img-left" alt="<?php echo $row['service_name']; ?>">
+                            <img src="<?php echo $row['image']; ?>" class="card-img-left img-circle" alt="<?php echo $row['service_name']; ?>">
                             <div class="card-body card-body-right">
                                 <h5 class="card-title"><?php echo $row['service_name']; ?></h5>
                                 <p class="card-text"><?php echo substr($row['description'], 0, 100) . (strlen($row['description']) > 100 ? '...' : ''); ?></p>

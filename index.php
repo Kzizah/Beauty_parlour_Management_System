@@ -44,6 +44,9 @@ $user_data = check_login($conn);
                   <a href="booking.php" class="navbar__links" id="services-page"
                     >Services</a
                   >
+                  <li style="color: red; font-size:60px; ba">
+                  Hello, <?php echo $user_data['user_name'];?>
+                  </li>
                 </li>
 
                
@@ -51,11 +54,11 @@ $user_data = check_login($conn);
                   <a href="#sign-up" class="button" id="signup">Sign Up</a>
                 </li> -->
               </ul>
-              <div class="search-box">
+              <!-- <div class="search-box">
                 <input type="text" class="tbox" placeholder="Search.." onkeyup="search_service()" id="searchbar" >
                 <button class="search-btn"><i class="fas fa-search"></i></button>
               </div>
-        </div>
+        </div> -->
         <li><button onclick="document.location='logout.php'">Log Out </button></li>
 
     </nav>

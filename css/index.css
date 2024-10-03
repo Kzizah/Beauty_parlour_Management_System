@@ -1069,4 +1069,10 @@ h1 {
   padding: 40px;
 }
 
+.img-circle {
+  width: 150px;  /* Adjust the size as needed */
+  height: 150px; /* Ensure the height is equal to the width for a perfect circle */
+  border-radius: 50%; /* This makes the image circular */
+  object-fit: cover; /* Ensures the image covers the circle without stretching */
+}
 
