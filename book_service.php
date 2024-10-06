@@ -6,71 +6,74 @@ include 'functions.php';
 // Fetch user data
 $user_data = check_login($conn);
 
-// Check if the service ID is provided
-if (!isset($_GET['service_id'])) {
-    echo "Service ID is required.";
-    exit();
-}
-
+// Fetch service details
 $service_id = $_GET['service_id'];
-$customer_name = $user_data['user_name'];
-$customer_email = $user_data['email'];
-$booking_date = date('Y-m-d'); // Current date
-
-// Fetch the service details from the database
-$service_query = "SELECT service_name, session_slots, booked_slots FROM services WHERE id = ?";
-$stmt = $conn->prepare($service_query);
-$stmt->bind_param('i', $service_id);
+$sql = "SELECT * FROM services WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $service_id);
 $stmt->execute();
 $service_result = $stmt->get_result();
 
-if ($service_result->num_rows > 0) {
-    $service = $service_result->fetch_assoc();
-    $service_name = $service['service_name'];
-    $available_slots = $service['session_slots'] - $service['booked_slots'];
-} else {
+if ($service_result->num_rows === 0) {
     echo "Service not found.";
-    exit();
+    exit; // Stop further processing if the service is not found
 }
 
-// Check if there are available slots
-if ($available_slots <= 0) {
-    echo "No available slots for this service.";
-    exit();
-}
+$service = $service_result->fetch_assoc();
 
-// Check if the booking already exists
-$check_query = "SELECT * FROM bookings WHERE service_id = ? AND customer_email = ? AND booking_date = ?";
-$stmt = $conn->prepare($check_query);
-$stmt->bind_param('sss', $service_id, $customer_email, $booking_date);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    echo "You have already booked this service today.";
-} else {
-    // Prepare and execute the SQL statement for booking
-    $sql = "INSERT INTO bookings (service_id, customer_name, customer_email, booking_date, service_name) 
-            VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('sssss', $service_id, $customer_name, $customer_email, $booking_date, $service_name);
-
-    if ($stmt->execute()) {
-        // Update the available slots
-        $update_slots = "UPDATE services SET booked_slots = booked_slots + 1 WHERE id = ?";
-        $stmt = $conn->prepare($update_slots);
-        $stmt->bind_param('i', $service_id);
-        if ($stmt->execute()) {
-            echo "Booking successful!";
-        } else {
-            echo "Error updating slots: " . $stmt->error;
-        }
-    } else {
-        echo "Error: " . $stmt->error;
-    }
-}
+// Fetch staff for the selected service
+$staff_sql = "SELECT * FROM staff WHERE service_id = ?";
+$staff_stmt = $conn->prepare($staff_sql);
+$staff_stmt->bind_param("i", $service_id);
+$staff_stmt->execute();
+$staff_result = $staff_stmt->get_result();
 
 // Close the connection
-$stmt->close();
 $conn->close();
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Service</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <style>
+        /* Your existing styles here */
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Book Service: <?php echo htmlspecialchars($service['service_name']); ?></h1>
+
+        <form action="process_booking.php" method="POST">
+            <input type="hidden" name="service_id" value="<?php echo htmlspecialchars($service['id']); ?>">
+            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($user_data['user_id']); ?>">
+
+            <div class="mb-3">
+                <label for="booking_time" class="form-label">Choose a Time Slot:</label>
+                <input type="datetime-local" name="booking_time" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="staff_id" class="form-label">Choose Staff:</label>
+                <select name="staff_id" class="form-select" required>
+                    <option value="">Select Staff</option>
+                    <?php while($staff = $staff_result->fetch_assoc()): ?>
+                        <option value="<?php echo htmlspecialchars($staff['id']); ?>"><?php echo htmlspecialchars($staff['name']); ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="payment" class="form-label">Payment Amount:</label>
+                <p>$<?php echo number_format($service['price'], 2); ?></p>
+            </div>
+
+            <button type="submit" class="btn btn-custom">Confirm Booking</button>
+        </form>
+    </div>
+</body>
+</html>

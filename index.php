@@ -44,9 +44,11 @@ $user_data = check_login($conn);
                   <a href="booking.php" class="navbar__links" id="services-page"
                     >Services</a
                   >
-                  <li style="color: red; font-size:60px; ba">
-                  Hello, <?php echo $user_data['user_name'];?>
-                  </li>
+                  <li class="navbar__item" style="color: red;">
+                Hello, <?php echo htmlspecialchars($user_data['user_name']); ?>
+                <br>
+                <span style="font-size: 14px;"><?php echo htmlspecialchars($user_data['email']); ?></span>
+            </li>
                 </li>
 
                
@@ -63,11 +65,7 @@ $user_data = check_login($conn);
 
     </nav>
 
-    <section id="homesection">     <br>
-
-        <p style="color: red; font-size:60px;">
-        Hello, <?php echo $user_data['user_name'];?>,</p>
-        <h2 onclick="changeText(this)">Click on this text!</h2>
+    
 
 <script>
     function changeText(id) 
