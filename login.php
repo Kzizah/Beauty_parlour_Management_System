@@ -11,23 +11,66 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $password = $_POST['password'];
     $code = trim($_POST['2fa_code']);
 
-    $query = "SELECT * FROM customer WHERE user_name = '$user_name' LIMIT 1";
-    $result = mysqli_query($conn, $query);
+    // Prepare and execute the query
+    $stmt = $conn->prepare("SELECT * FROM customer WHERE user_name = ? LIMIT 1");
+    $stmt->bind_param("s", $user_name);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        $user_data = mysqli_fetch_assoc($result);
+    if ($result && $result->num_rows > 0) {
+        $user_data = $result->fetch_assoc();
+
+        // Check if account is locked
+        if ($user_data['lockout_until'] && strtotime($user_data['lockout_until']) > time()) {
+            $remaining_time = strtotime($user_data['lockout_until']) - time();
+            $unlock_time = date("H:i:s", strtotime($user_data['lockout_until']));
+            echo "<div id='lockoutMessage'>Account is locked. Please try again at $unlock_time.</div>";
+            echo "<div id='countdown'></div>"; // Add countdown div
+            echo "<script>var remainingTime = $remaining_time;</script>"; // Pass remaining time to JavaScript
+            exit;
+        }
+
+        // Check login attempts
+        if ($user_data['login_attempts'] >= 5) {
+            // Lock account for 5 minutes
+            $lockout_time = date("Y-m-d H:i:s", strtotime("+5 minutes"));
+            $update_lockout_query = "UPDATE customer SET lockout_until = ?, login_attempts = login_attempts + 1 WHERE user_name = ?";
+            $stmt = $conn->prepare($update_lockout_query);
+            $stmt->bind_param("ss", $lockout_time, $user_name);
+            $stmt->execute();
+            echo "<div id='lockoutMessage'>Too many failed attempts. Your account is locked for 5 minutes.</div>";
+            echo "<div id='countdown'></div>"; // Add countdown div
+            echo "<script>var remainingTime = 300;</script>"; // Set initial lockout duration in seconds
+            exit;
+        }
 
         if (password_verify($password, $user_data['password'])) {
             // Verify 2FA code
             $secret = $user_data['two_fa_secret'];
             if ($gAuth->verifyCode($secret, $code)) {
+                // Reset login attempts and lockout time on successful login
+                $reset_attempts_query = "UPDATE customer SET login_attempts = 0, lockout_until = NULL WHERE user_name = ?";
+                $stmt = $conn->prepare($reset_attempts_query);
+                $stmt->bind_param("s", $user_name);
+                $stmt->execute();
+
                 $_SESSION['user_id'] = $user_data['user_id'];
                 header("Location: index.php");
                 die;
             } else {
+                // Increment login attempts
+                $update_attempts_query = "UPDATE customer SET login_attempts = login_attempts + 1 WHERE user_name = ?";
+                $stmt = $conn->prepare($update_attempts_query);
+                $stmt->bind_param("s", $user_name);
+                $stmt->execute();
                 echo "Invalid 2FA code.";
             }
         } else {
+            // Increment login attempts
+            $update_attempts_query = "UPDATE customer SET login_attempts = login_attempts + 1 WHERE user_name = ?";
+            $stmt = $conn->prepare($update_attempts_query);
+            $stmt->bind_param("s", $user_name);
+            $stmt->execute();
             echo "Wrong username or password!";
         }
     } else {
@@ -35,7 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 }
 ?>
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -77,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <a href="forgot_password.php">Forgot Password?</a>
             </div>
         </form>
+        <div id="countdown" class="text-center mt-3"></div> <!-- Add countdown div -->
     </div>
 
     <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
@@ -123,6 +166,22 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             
             qrCodeScannerDiv.style.display = "block"; // Show the scanner
         });
+
+        // Countdown Timer
+        var countdownElement = document.getElementById('countdown');
+        if (typeof remainingTime !== 'undefined' && remainingTime > 0) {
+            countdownElement.textContent = `Please wait ${Math.ceil(remainingTime / 60)} minute(s) before trying again.`;
+
+            const countdownInterval = setInterval(() => {
+                remainingTime--;
+                countdownElement.textContent = `Please wait ${Math.ceil(remainingTime / 60)} minute(s) before trying again.`;
+
+                if (remainingTime <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.textContent = ""; // Clear countdown when time is up
+                }
+            }, 1000);
+        }
     </script>
 </body>
 </html>

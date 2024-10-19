@@ -9,11 +9,23 @@
 -- );
 
 
-SELECT * FROM bookings
+-- SELECT * FROM customer
+
+-- ALTER TABLE users
+-- DROP COLUMN login_attempts INT DEFAULT 0,
+-- DROP COLUMN lockout_until DATETIME NULL;
+-- ALTER TABLE users
+-- DROP COLUMN login_attempts,
+-- DROP COLUMN lockout_until;
+-- ALTER TABLE customer 
+-- ADD COLUMN lockout_until DATETIME NULL;
+
 
 -- ALTER TABLE bookings CHANGE customer_name user_name VARCHAR(255) NOT NULL;
 
--- SHOW COLUMNS FROM bookings
+SHOW COLUMNS FROM bookings
+-- ALTER TABLE bookings MODIFY booking_time VARCHAR(20) NOT NULL DEFAULT 'Not Specified';
+
 
 
 -- ALTER TABLE bookings DROP COLUMN booking_time;

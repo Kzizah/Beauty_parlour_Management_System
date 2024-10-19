@@ -1,0 +1,12 @@
+# Use the official MySQL image as a base
+FROM mysql:8.0
+
+# Copy custom initialization scripts (if any)
+# If you have an SQL script you want to run on startup, you can place it here.
+# COPY ./init.sql /docker-entrypoint-initdb.d/
+
+# Set environment variables (optional to set defaults here)
+# ENV MYSQL_ROOT_PASSWORD=rootpassword
+# ENV MYSQL_DATABASE=parlour
+# ENV MYSQL_USER=user
+# ENV MYSQL_PASSWORD=userpassword

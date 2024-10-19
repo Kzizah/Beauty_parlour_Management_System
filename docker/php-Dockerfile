@@ -1,0 +1,14 @@
+# Use the official PHP image with Apache
+FROM php:8.1-apache
+
+# Create the directory if it doesn't exist
+RUN mkdir -p /var/www/html
+
+# Copy the entire PHP application from the context directory (Beauty_parlour_Management_System) to the container
+COPY . /var/www/html/  # Copies all files and directories from the project root to /var/www/html/
+
+# Set the working directory
+WORKDIR /var/www/html
+
+# Expose port 80 to be accessible
+EXPOSE 80

@@ -2,7 +2,8 @@
     "require": {
         "phpmailer/phpmailer": "^6.9",
         "robthree/twofactorauth": "^3.0",
-        "phpgangsta/googleauthenticator": "dev-master"
+        "phpgangsta/googleauthenticator": "dev-master",
+        "stripe/stripe-php": "^16.1"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

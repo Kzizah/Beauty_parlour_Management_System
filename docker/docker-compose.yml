@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: php-Dockerfile
+    ports:
+      - "8000:80" # Access your PHP app at http://localhost:8000
+    volumes:
+      - ./php:/var/www/html # Mount local php folder to the container
+    depends_on:
+      - mysql # Ensure MySQL starts before PHP
+
+  mysql:
+    build:
+      context: . # Build from the Dockerfile in the mysql folder
+      dockerfile: mysql-Dockerfile
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 6970 # Set root password
+      MYSQL_DATABASE: parlour # Create a database
+      MYSQL_USER: user # Create a new user
+      MYSQL_PASSWORD: 6970 # Set user password
+    volumes:
+      - db_data:/var/lib/mysql # Persist MySQL data
+
+volumes:
+  db_data:

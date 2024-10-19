@@ -18,29 +18,39 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if ($password != $confirm_password) {
         echo "<script>alert('Passwords do not match');</script>";
     } elseif (!empty($user_name) && !empty($password) && !is_numeric($user_name) && !empty($email)) {
-        // Hash password using password_hash() and save to the database
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        // Check if the email already exists
+        $email_check_query = "SELECT * FROM customer WHERE email = '$email' LIMIT 1";
+        $result = mysqli_query($conn, $email_check_query);
+        
+        if (mysqli_num_rows($result) > 0) {
+            echo "<script>alert('Email is already registered');</script>";
+        } else {
+            // Hash password using password_hash() and save to the database
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-        // Generate a random user ID
-        $user_id = random_num(20);
+            // Generate a random user ID
+            $user_id = random_num(20);
 
-        // Generate 2FA secret key
-        $secret = $gAuth->createSecret();
+            // Generate 2FA secret key
+            $secret = $gAuth->createSecret();
 
-        // Store user information in the database
-        $query = "INSERT INTO customer (user_id, user_name, password, email, two_fa_secret) VALUES ('$user_id', '$user_name', '$password_hash', '$email', '$secret')";
-        mysqli_query($conn, $query);
+            // Store user information in the database
+            $query = "INSERT INTO customer (user_id, user_name, password, email, two_fa_secret) VALUES ('$user_id', '$user_name', '$password_hash', '$email', '$secret')";
+            if (mysqli_query($conn, $query)) {
+                // Generate the QR code URL for Google Authenticator
+                $qrCodeUrl = $gAuth->getQRCodeGoogleUrl('The Hobbits Parlour', $secret);
 
-        // Generate the QR code URL for Google Authenticator
-        $qrCodeUrl = $gAuth->getQRCodeGoogleUrl('The Hobbits Parlour', $secret);
+                // Store the secret in session to display on the next page
+                $_SESSION['qrCodeUrl'] = $qrCodeUrl;
+                $_SESSION['secret'] = $secret;
 
-        // Store the secret in session to display on next page
-        $_SESSION['qrCodeUrl'] = $qrCodeUrl;
-        $_SESSION['secret'] = $secret;
-
-        // Redirect to the 2FA setup page
-        header("Location: 2fa_setup.php");
-        die;
+                // Redirect to the 2FA setup page
+                header("Location: 2fa_setup.php");
+                die;
+            } else {
+                echo "<script>alert('Signup failed: " . mysqli_error($conn) . "');</script>";
+            }
+        }
     } else {
         echo "<script>alert('Please fill in all fields correctly');</script>";
     }

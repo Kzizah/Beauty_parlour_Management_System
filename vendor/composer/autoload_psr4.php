@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Stripe\\' => array($vendorDir . '/stripe/stripe-php/lib'),
     'RobThree\\Auth\\' => array($vendorDir . '/robthree/twofactorauth/lib'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
 );

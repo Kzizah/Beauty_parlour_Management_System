@@ -55,6 +55,11 @@
     list-style: none;
 }
 
+
+.navbar__menu.active {
+  display: block;
+}
+
 /* Style navbar item (home,about and services) */
 .navbar__item {
     height: 80px;
@@ -133,15 +138,20 @@
 }
 
 .search-btn {
-  width:50px;
-  background-color: #ff8177;
+  width: 50px;
+  background-color: #ff8177; /* Fallback color */
   background-image: linear-gradient(to top, #ff0844 0%, #ffb199 100%);
   background-size: 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
+  color: transparent; /* Ensure the text is transparent */
+  background-clip: text; /* Use background-clip to clip the background */
+  -webkit-background-clip: text; /* WebKit-specific */
+  -moz-background-clip: text; /* Not widely supported */
+  -webkit-text-fill-color: transparent; /* Ensure text is filled with background */
+  font-size: 20px; /* Adjust font size as necessary */
+  border: none; /* Remove default button border */
+  cursor: pointer; /* Change cursor on hover */
 }
+
 
 /* Mess around with the media queries */
 @media screen and (max-width: 960px) {

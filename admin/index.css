@@ -1,0 +1,159 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+  background-color: gainsboro;
+  margin: 0px;
+  padding: 0px;
+}
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: right;
+  height: 50px;
+  background-color: grey;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+  padding: 0px 5%;
+}
+nav button {
+  width: 140px;
+  height: 33px;
+  font-family: calibri;
+  font-weight: bold;
+  font-size: 14px;
+  outline-offset: inherit;
+  background-color: darkslategray;
+  color: white;
+  border: none;
+}
+nav button:hover{
+  color: red;
+  background-color: rgb(0, 0, 0);
+}
+nav ul {
+  display: flex;
+}
+nav ul li a {
+  margin: 0px;
+  font-family: myriad pro regular;
+  color: #505050;
+  font-size: 15px;
+  font-weight: 100;
+}
+footer {
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color:grey;
+}
+
+section#homesection {
+  width: 100%;
+  height: 150vh;
+  background-image: url("media/joel-filipe-aK0EmfPuktA-unsplash.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+p#p1
+{
+  font-size: 60px;
+  font-weight: bold;
+  color: black;
+  line-height: 50px;
+  text-align: left;
+}
+
+p#p2
+{
+  font-size: 60px;
+  font-weight: bold;
+  color: white;
+  line-height: 50px;
+  text-align: left;
+}
+section#servicesection {
+  width: 100%;
+  height: 300vh;
+  background-image: url("media/icons8-team-ZGzHKEpem88-unsplash.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+p
+{
+font-size: 20px;
+font-weight: bold;
+color: black;
+line-height: 50px;
+text-align: center;
+
+}
+h1
+{
+  font-size: 40px;
+  font-weight: bolder;
+  color: black;
+  line-height: 50px;
+  text-align: center;
+}
+h2
+{
+  font-size: 40px;
+  font-weight: bolder;
+  color: black;
+  line-height: 50px;
+  text-align: center;
+}
+section#gallery {
+  width: 100%;
+  height: 150vh;
+  /*background-image: url("media/styles-0zPHSdHAwG4-unspla.jpg");*/
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  
+}
+section#contact {
+  width: 100%;
+  height: 120vh;
+  /*background-image: url("media/dmytro-lopatin-ukcd24k9fnM-unsplash.jpg");*/
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+section#about
+{
+    width: 100%;
+    height: 80vh;
+    /*background-image: url("media/dmytro-lopatin-ukcd24k9fnM-unsplash.jpg");*/
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+table
+{
+  background-color:grey;
+  border-collapse: collapse;
+}
+table#table1
+{
+  border: 1;
+}
+td {
+  border: 1px blanchedalmond;
+  padding: 0.5rem;
+  text-align: center;
+  color:brown;
+}
+th {
+  border: 1px solid #777;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+
+ 
