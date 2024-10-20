@@ -84,6 +84,8 @@ include "connections.php";
         <li><button onclick="document.location='users.php'">Registered Customers</button></li>
         <li><button onclick="document.location='services.php'">Services We Offer</button></li>
         <li><button onclick="document.location='bookings.php'">Bookings Done</button></li>
+        <li><button onclick="document.location='logout.php'">Log Out </button></li>
+
     </nav>
 
     <h2>Registered Users</h2>
