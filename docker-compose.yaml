@@ -1,0 +1,47 @@
+version: '3'  # docker-compose version
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - "./:/var/www/html"  # sync project dir with container web dir
+    ports:
+      - "8001:80"  # map host port 8001 to container port 80
+      - "443:443"  # map host port 443 to container port 443 (for future SSL traffic)
+    command: /bin/sh -c "echo 'ServerName localhost' >> /etc/apache2/apache2.conf && apache2-foreground"  # Set ServerName and start Apache
+
+     # Use the new startup script
+
+  mysql:
+    image: mysql:5.7  # Use MySQL version 5.7
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 6970  # root password for MySQL
+      MYSQL_DATABASE: parlour      # default database name
+      MYSQL_USER: php_docker       # non-root user
+      MYSQL_PASSWORD: root         # non-root user password
+    volumes:
+      - mysql_data:/var/lib/mysql  # persist MySQL data
+      - "./db:/docker-entrypoint-initdb.d"  # initialize MySQL with scripts in ./db
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql               # link to the MySQL service
+      MYSQL_ROOT_PASSWORD: 6970     # MySQL root password
+    ports:
+      - "8080:80"                   # phpMyAdmin will be available on http://localhost:8080
+
+  mailhog:                        # Add MailHog service
+    image: kzizah/mailhog-custom:1.0.0       # MailHog image
+    ports:
+      - "1025:1025"               # SMTP port
+      - "8025:8025"               # Web interface port
+
+volumes:
+  mysql_data:                     # named volume for MySQL data

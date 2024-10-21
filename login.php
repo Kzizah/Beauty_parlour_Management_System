@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             exit;
         }
 
+        // Verify password
         if (password_verify($password, $user_data['password'])) {
             // Verify 2FA code
             $secret = $user_data['two_fa_secret'];
@@ -54,11 +55,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $stmt->bind_param("s", $user_name);
                 $stmt->execute();
 
+                // Store user details in session
                 $_SESSION['user_id'] = $user_data['user_id'];
-                header("Location: index.php");
+                $_SESSION['role'] = $user_data['role']; // Store user role in session
+
+                // Redirect based on role
+                if ($user_data['role'] === 'admin') {
+                    header("Location: admin/users.php");  // Redirect admin to admin dashboard
+                } else {
+                    header("Location: index.php");  // Redirect non-admin users to homepage
+                }
                 die;
             } else {
-                // Increment login attempts
+                // Increment login attempts on failed 2FA code
                 $update_attempts_query = "UPDATE customer SET login_attempts = login_attempts + 1 WHERE user_name = ?";
                 $stmt = $conn->prepare($update_attempts_query);
                 $stmt->bind_param("s", $user_name);
@@ -66,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 echo "Invalid 2FA code.";
             }
         } else {
-            // Increment login attempts
+            // Increment login attempts on failed password
             $update_attempts_query = "UPDATE customer SET login_attempts = login_attempts + 1 WHERE user_name = ?";
             $stmt = $conn->prepare($update_attempts_query);
             $stmt->bind_param("s", $user_name);
@@ -78,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 }
 ?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -100,9 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <input type="password" class="form-control" id="password" name="password" required>
                 <div class="form-check mt-2">
                     <input class="form-check-input" type="checkbox" id="showPassword">
-                    <label class="form-check-label" for="showPassword">
-                        Show Password
-                    </label>
+                    <label class="form-check-label" for="showPassword">Show Password</label>
                 </div>
             </div>
             <div class="mb-3">

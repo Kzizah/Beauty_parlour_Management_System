@@ -10,7 +10,7 @@
             "port": 3306,
             "driver": "MySQL",
             "name": "BeautyParlour",
-            "database": "Parlour",
+            "database": "parlour",
             "username": "root"
         },
         {
@@ -22,7 +22,7 @@
             "server": "localhost",
             "port": 3306,
             "driver": "MySQL",
-            "name": "BeautyParlour",
+            "name": "DockerParlour",
             "database": "parlour",
             "username": "root"
         }

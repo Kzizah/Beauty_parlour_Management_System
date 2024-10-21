@@ -117,8 +117,10 @@ include "connections.php";
                     . htmlspecialchars($row['email']) . "</td><td>" 
                     . htmlspecialchars($row['role']) . "</td><td>" 
                     . htmlspecialchars($row['login_attempts']) . "</td><td>" 
-                    . htmlspecialchars($row['last_failed_login']) . "</td><td>" 
-                    . htmlspecialchars($row['lockout_until']) . "</td><td>";
+                    // . htmlspecialchars($row['last_failed_login']) . "</td><td>"
+                    . htmlspecialchars($row['last_failed_login'] ?? '') . "</td><td>"
+                    // . htmlspecialchars($row['lockout_until']) . "</td><td>";
+                    . htmlspecialchars($row['lockout_until'] ?? '') . "</td><td>";
                 
                 // DELETE button
                 echo "<form action='./deleteuser.php' method='POST' onsubmit='return confirmDelete();'>

@@ -27,7 +27,7 @@ if (isset($_GET['success']) && $_GET['success'] == '1') {
     try {
         // Server settings
         $mail->isSMTP(); // Set mailer to use SMTP
-        $mail->Host = 'localhost'; // Use localhost for MailHog
+        $mail->Host = 'mailhog'; // Use mailhog for MailHog
         $mail->Port = 1025; // MailHog SMTP port
         $mail->SMTPAuth = false; // No authentication needed for MailHog
 

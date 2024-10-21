@@ -9,8 +9,6 @@ $user_data = check_login($conn);
 // Fetch services from the database
 $sql = "SELECT * FROM services";
 $result = $conn->query($sql);
-
-// Close the connection for the main service query but reopen later for the booking submission
 ?>
 
 <!DOCTYPE html>
@@ -72,11 +70,14 @@ $result = $conn->query($sql);
                                         <select name="staff_id" class="form-select" required>
                                             <option value="">Choose Staff...</option>
                                             <?php
-                                            // Fetch staff members from the database
-                                            $staff_sql = "SELECT * FROM staff"; // Assuming you have a staff table
+                                            // Fetch staff members from the customer table based on the role of 'staff'
+                                            $staff_sql = "SELECT customer.user_id, customer.user_name
+                                                          FROM customer
+                                                          INNER JOIN staff_service ON customer.user_id = staff_service.staff_id
+                                                          WHERE staff_service.service_id = " . $row['id'];
                                             $staff_result = $conn->query($staff_sql);
                                             while ($staff_row = $staff_result->fetch_assoc()): ?>
-                                                <option value="<?php echo $staff_row['id']; ?>"><?php echo $staff_row['name']; ?></option>
+                                                <option value="<?php echo $staff_row['user_id']; ?>"><?php echo $staff_row['user_name']; ?></option>
                                             <?php endwhile; ?>
                                         </select>
                                     </div>

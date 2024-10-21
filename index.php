@@ -44,6 +44,7 @@ $user_data = check_login($conn);
                   <a href="booking.php" class="navbar__links" id="services-page"
                     >Services</a
                   >
+               
                   <li class="navbar__item" style="color: red;">
                 Hello, <?php echo htmlspecialchars($user_data['user_name']); ?>
                 <br>

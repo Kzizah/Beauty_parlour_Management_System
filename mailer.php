@@ -10,7 +10,7 @@ function sendPasswordResetEmail($email, $token) {
     try {
         // Server settings
         $mail->isSMTP();                                      // Set mailer to use SMTP
-        $mail->Host = 'localhost';                            // Set the MailHog server
+        $mail->Host = 'mailhog';                            // Set the MailHog server
         $mail->SMTPAuth = false;                              // No SMTP authentication for MailHog
         $mail->Port = 1025;                                   // TCP port to connect to MailHog
         
@@ -27,7 +27,9 @@ function sendPasswordResetEmail($email, $token) {
         $mail->send();
         
         // Start session to store the message
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $_SESSION['message'] = 'A password reset link has been sent to your email.';
         
         // Redirect to the message page
@@ -35,10 +37,13 @@ function sendPasswordResetEmail($email, $token) {
         exit();
         
     } catch (Exception $e) {
-        // Start session to store the error message
-        session_start();
+        // Check if session is not already started
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    
         $_SESSION['message'] = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-
+    
         // Redirect to the message page
         header("Location: message.php");
         exit();

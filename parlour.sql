@@ -1,4 +1,24 @@
 -- SHOW TABLES
+SHOW COLUMNS FROM bookings
+-- ALTER TABLE bookings MODIFY staff_id VARCHAR(20);
+-- 
+
+-- ALTER TABLE staff_service
+-- ADD staff_name VARCHAR(100) NOT NULL,
+-- ADD service_name VARCHAR(100) NOT NULL;
+
+
+-- CREATE TABLE staff_service (
+--     staff_id VARCHAR(20),
+--     service_id INT,
+--     PRIMARY KEY (staff_id, service_id),
+--     FOREIGN KEY (staff_id) REFERENCES customer(user_id),
+--     FOREIGN KEY (service_id) REFERENCES services(id)
+-- );
+-- INSERT INTO staff_service (staff_id, service_id) VALUES ('574077886', 1); -- Staff for haircuts
+-- INSERT INTO staff_service (staff_id, service_id) VALUES ('5005296944', 2); -- Staff for manicure
+
+
 -- CREATE TABLE staff (
 --     id INT(11) AUTO_INCREMENT PRIMARY KEY,
 --     name VARCHAR(255) NOT NULL,
@@ -23,7 +43,7 @@
 
 -- ALTER TABLE bookings CHANGE customer_name user_name VARCHAR(255) NOT NULL;
 
-SHOW COLUMNS FROM bookings
+-- SHOW COLUMNS FROM customer
 -- ALTER TABLE bookings MODIFY booking_time VARCHAR(20) NOT NULL DEFAULT 'Not Specified';
 
 
