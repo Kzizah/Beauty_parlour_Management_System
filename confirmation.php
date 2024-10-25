@@ -2,6 +2,7 @@
 session_start();
 include 'connections.php';
 include 'functions.php';
+include 'header.php'; // Include the session management logic
 
 // Use Composer's autoload
 require 'vendor/autoload.php'; // Adjust the path according to your project structure

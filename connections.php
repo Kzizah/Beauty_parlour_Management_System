@@ -14,7 +14,7 @@ $dotenv->load();
 
 $databasehost = "mysql"; // name of the server
 $databaseuser = "root"; // username of the database
-$databasepassword = $_ENV['MYSQL_ROOT_PASSWORD']; // password
+$databasepassword = "6970"; // password
 $databasename = $_ENV['MYSQL_DATABASE']; // database name of Beauty Parlour Management System
 
 // Create and check connection

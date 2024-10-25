@@ -2,6 +2,7 @@
 session_start();
 include("connections.php");
 include("mailer.php");  // Include mailer.php for sending the email
+include 'header.php'; // Include the session management logic
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $email = $_POST['email'];
@@ -27,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 ?>
 
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">

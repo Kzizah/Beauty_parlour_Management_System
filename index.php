@@ -2,6 +2,7 @@
 session_start();
     include("connections.php");
     include("functions.php");
+    include 'header.php'; // Include the session management logic
 
 $user_data = check_login($conn);
 ?>
