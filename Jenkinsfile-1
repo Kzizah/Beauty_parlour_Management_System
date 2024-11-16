@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+
+    environment {
+        REPO_URL = 'https://github.com/Kzizah/Beauty_parlour_Management_System.git'
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                echo 'Cloning the repository...'
+                git branch: 'main', url: "${REPO_URL}"
+            }
+        }
+    }
+}

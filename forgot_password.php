@@ -1,26 +1,43 @@
 <?php
 session_start();
 include("connections.php");
-include("mailer.php");  // Include mailer.php for sending the email
-include 'header.php'; // Include the session management logic
+include("mailer.php");
+// include 'header.php';
+
+// Enable error reporting
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $email = $_POST['email'];
 
-    // Check if the email exists
-    $query = "SELECT * FROM customer WHERE email = '$email' LIMIT 1";
-    $result = mysqli_query($conn, $query);
+    // Check if the email exists using a prepared statement
+    $query = "SELECT * FROM customer WHERE email = ? LIMIT 1";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($result && mysqli_num_rows($result) > 0) {
+    if ($result && $result->num_rows > 0) {
         // Generate a unique token for password reset
         $token = bin2hex(random_bytes(50));
 
-        // Store the token and expiration time in the password_resets table
-        $query = "INSERT INTO password_resets (email, token, expires_at) VALUES ('$email', '$token', DATE_ADD(NOW(), INTERVAL 1 HOUR))";
-        mysqli_query($conn, $query);
+        // Store the token and expiration time using a prepared statement
+        $query = "INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 1 HOUR))";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ss", $email, $token);
 
-        // Send password reset email using PHPMailer
-        sendPasswordResetEmail($email, $token);
+        if ($stmt->execute()) {
+            // Send password reset email using PHPMailer
+            if (sendPasswordResetEmail($email, $token)) {
+                echo "Password reset email has been sent.";
+            } else {
+                echo "Failed to send the email.";
+            }
+        } else {
+            echo "Failed to insert the reset token.";
+        }
     } else {
         echo "No account found with that email.";
     }
@@ -28,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 ?>
 
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">

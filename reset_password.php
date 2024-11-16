@@ -1,7 +1,7 @@
 <?php
 session_start(); // Start the session
 include("connections.php"); // Include your database connection
-include 'header.php'; // Include the session management logic
+// include 'header.php'; // Include the session management logic
 
 function isValidPassword($password) {
     // Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a digit, and a special character

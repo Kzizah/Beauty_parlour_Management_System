@@ -110,6 +110,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <div class="text-center mt-3">
                 <a href="login.php">Already have an account? Login here</a>
             </div>
+            <div class="text-center mt-2">
+                <a href="forgot_password.php">Forgot Password?</a>
+            </div>
         </form>
     </div>
 </div>
