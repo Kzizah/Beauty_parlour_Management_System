@@ -11,6 +11,8 @@ RUN a2enmod rewrite
 # Copy project files to the web server's document root
 COPY . /var/www/html
 
+COPY /var/jenkins_home/workspace/Beauty_parlour_Management_System/* /var/www/html/
+
 # Set ownership and permissions for the web server
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html  # Ensure proper permissions
