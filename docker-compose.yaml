@@ -8,7 +8,7 @@ services:
     volumes:
       - "./:/var/www/html"  # sync project dir with container web dir
     ports:
-      - "8001:8001"  # map host port 8001 to container port 80
+      - "8001:80"  # map host port 8001 to container port 80
       - "443:443"  # map host port 443 to container port 443 (for future SSL traffic)
     command: /bin/sh -c "echo 'ServerName localhost' >> /etc/apache2/apache2.conf && apache2-foreground"  # Set ServerName and start Apache
 
@@ -33,7 +33,7 @@ services:
       PMA_HOST: mysql                      # link to the MySQL service
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # MySQL root password
     ports:
-      - "8081:8081"                          # phpMyAdmin will be available on http://localhost:8081
+      - "8081:80"                          # phpMyAdmin will be available on http://localhost:8081
 
   mailhog:                                 # Add MailHog service
     image: kzizah/mailhog-custom:1.0.0      # MailHog image
