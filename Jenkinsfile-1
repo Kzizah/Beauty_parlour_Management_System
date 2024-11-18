@@ -1,39 +1,30 @@
 pipeline {
     agent any
-
     stages {
-        stage('Update and Install Docker') {
+
+        stage('Clone Repository') {
             steps {
-                script {
-                    echo 'Updating package manager and installing Docker...'
-                    sh '''
-                    # Update the package manager
-                    sudo apt-get update
-
-                    # Install required packages
-                    sudo apt-get install -y \
-                        apt-transport-https \
-                        ca-certificates \
-                        curl \
-                        software-properties-common
-
-                    # Add Docker’s official GPG key
-                    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-
-                    # Set up the stable Docker repository
-                    echo \
-                      "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-                      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-                    # Install Docker Engine
-                    sudo apt-get update
-                    sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-
-                    # Verify Docker installation
-                    docker --version
-                    '''
-                }
+                // Replace with your actual GitHub repository URL
+                git branch: 'main', url: 'https://github.com/Kzizah/Beauty_parlour_Management_System.git'
             }
         }
+
+        stage('Run Docker Version and Docker Compose Version') {
+            steps {
+                // Check Docker version
+                sh 'docker --version'
+
+                // Check Docker Compose version
+                sh 'docker-compose --version'
+            }
+        }
+
+        stage('Run Docker Compose to Start the Project') {
+            steps {
+                // Build and start the project
+                sh 'docker-compose up -d --build'
+            }
+        }
+
     }
 }
