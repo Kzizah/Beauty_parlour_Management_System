@@ -1,5 +1,8 @@
 pipeline {
     agent any
+     triggers {
+        pollSCM('H/2 * * * *') // Polls the SCM every 2 minutes
+    }
     stages {
 
         stage('Clone Repository') {
