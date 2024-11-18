@@ -8,8 +8,10 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql \
 # Enable Apache mod_rewrite for URL rewriting
 RUN a2enmod rewrite
 
+# Set working directory
+WORKDIR /var/www/html
 # Copy project files to the web server's document root
-COPY . /var/www/html
+COPY . .
 
 # Set ownership and permissions for the web server
 RUN chown -R www-data:www-data /var/www/html \
