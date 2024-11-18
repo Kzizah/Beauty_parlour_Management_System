@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - "./:/var/www/html"  # sync project dir with container web dir
+    # volumes:
+    #   - "./:/var/www/html"  # sync project dir with container web dir
     ports:
       - "8001:80"  # map host port 8001 to container port 80
       - "443:443"  # map host port 443 to container port 443 (for future SSL traffic)
